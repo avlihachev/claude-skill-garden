@@ -59,10 +59,22 @@ On first gardening-related query, Claude starts an onboarding dialog:
 3. Growing format (containers / raised beds / greenhouse / open ground)
 4. Indoor space for seedlings (windowsill, grow lights)
 5. Outdoor space (balcony, terrace, yard)
-6. Experience level
-7. Preferred seed suppliers (optional)
+6. Available space size (approximate area or number of container spots)
+7. Soil and substrate (store-bought mix / custom blends / garden soil)
+8. Experience level
+9. Preferred seed suppliers (optional)
 
 This creates your `profile.md` with all the data needed for personalized recommendations.
+
+### Updating Your Profile
+
+You can update your profile at any time:
+
+- *"Update my profile — I got a greenhouse"*
+- *"Change location to Berlin"*
+- *"Add a new supplier"*
+
+The skill also proactively suggests profile updates when it notices contradictions (e.g., you mention a greenhouse but your profile says "containers only").
 
 ## Usage
 
