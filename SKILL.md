@@ -31,10 +31,20 @@ If `profile.md` does not exist, start a dialog to create it. Ask one question at
 3. "Какой формат выращивания? (контейнеры / высокие грядки / теплица / открытый грунт / комбинация)" → Format
 4. "Есть ли место для рассады в помещении? (подоконник, стеллаж, фитолампы)" → Indoor space
 5. "Какое открытое пространство доступно? (балкон / терраса / двор / участок)" → Outdoor space
-6. "Ваш уровень опыта в садоводстве? (начинающий / средний / продвинутый)" → Level
-7. "Есть ли предпочтительные магазины или поставщики семян?" → Suppliers (optional)
+6. "Какой размер доступного пространства? (примерная площадь или количество мест для контейнеров)" → Space dimensions
+7. "Какой грунт/субстрат вы используете или планируете? (готовый покупной / свои смеси / земля с участка)" → Soil/substrate info
+8. "Ваш уровень опыта в садоводстве? (начинающий / средний / продвинутый)" → Level
+9. "Есть ли предпочтительные магазины или поставщики семян?" → Suppliers (optional)
 
 After collecting answers, create `profile.md` using the template structure. Also create empty `plants.md` and `journal.md` from their templates.
+
+## Updating the profile
+
+When the user says they want to update their profile, change location, add suppliers, or correct any information — read `profile.md`, make the changes, and confirm what was updated.
+
+Trigger phrases: "обнови профиль", "поменяй локацию", "добавь поставщика", "update profile", or any request to change personal growing parameters.
+
+Also proactively suggest profile updates when the user mentions something that contradicts their profile (e.g., they mention a greenhouse but profile says "containers only").
 
 ## Seasonal logic
 
