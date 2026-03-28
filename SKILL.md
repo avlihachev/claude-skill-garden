@@ -38,6 +38,7 @@ If `profile.md` does not exist, start a dialog to create it. Ask one question at
 9. "Ваш уровень опыта в садоводстве? (начинающий / средний / продвинутый)" → Level
 10. "Есть ли предпочтительные магазины или поставщики семян?" → Suppliers (optional)
 11. "Ведёте ли вы заметки по саду? (Obsidian / другое приложение / нет)" → Notes system. If yes, ask for path to create task files. Save as `tasks_path` in profile.
+12. "Хотите ли вы, чтобы я мог опознавать растения по фото? Можно скидывать фото в папку, и я определю вид, состояние, проблемы. Подходит для комнатных, садовых, любых растений." → If yes and tasks_path is set, create `{tasks_path}/Hus/Garden/Photos/` folder. Save photos_path in profile.
 
 After collecting answers, create `profile.md` using the template structure. Also create empty `plants.md` and `journal.md` from their templates.
 
@@ -232,6 +233,50 @@ If `tasks_path` is set in profile.md, write actionable garden tasks to `{tasks_p
 - When a task is done (user confirms or journal entry matches), move it to Completed with `✅ DD.MM.YYYY`
 - Read the file before writing to avoid duplicates or overwriting manual edits
 - If `tasks_path` is not set, don't create the file — just mention tasks in conversation
+
+## Photo identification
+
+Works for any plants — houseplants, garden, outdoor, wild. When the user asks to identify plants from photos (e.g., "опознай растения", "identify my plants", "что у меня растёт", "что это за цветок"), or when processing new photos:
+
+### Photo folder
+
+Photos are stored in `{tasks_path}/Hus/Garden/Photos/` (inside Obsidian vault). The user drops photos there manually.
+
+### Process
+
+1. Read all image files from the photo folder (jpg, jpeg, png, heic)
+2. For each image, use vision to identify:
+   - Plant species and variety (if distinguishable)
+   - Health assessment (healthy / issues visible)
+   - Growth stage (seedling / vegetative / flowering / fruiting / dormant)
+   - Location context (indoor / outdoor / garden bed / container / wild)
+   - For houseplants: light and watering needs assessment
+   - Any visible problems (pests, deficiency, disease)
+3. Present results to the user for confirmation
+4. After confirmation, for each identified plant:
+   - Add to `plants.md` if not already there
+   - Add a journal entry with photo observation
+   - Move processed photo to `{tasks_path}/Hus/Garden/Photos/processed/` subfolder
+5. If a photo matches an existing plant in plants.md, update its status and add a journal note
+
+### Output format
+
+For each photo, report:
+```
+📷 [filename]
+🌱 Identified: [species — variety or best guess]
+📊 Stage: [growth stage]
+💚 Health: [assessment]
+⚠️ Issues: [if any]
+📍 Location: [if visible — indoor/outdoor/container type]
+```
+
+Wait for user confirmation before writing to plants.md or journal.md.
+
+### Notes
+- If identification is uncertain, say so and offer alternatives
+- Group similar plants (e.g., "3 photos appear to be the same tomato plant at different angles")
+- Suggest the user label photos with plant names for future reference
 
 ## Reference files
 

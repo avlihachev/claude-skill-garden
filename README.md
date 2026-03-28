@@ -64,6 +64,7 @@ On first gardening-related query, Claude starts an onboarding dialog:
 8. Experience level
 9. Preferred seed suppliers (optional)
 10. Task output path (Obsidian vault or none)
+11. Photo identification (drop photos into a folder for plant ID)
 
 This creates your `profile.md` with all the data needed for personalized recommendations.
 
@@ -93,6 +94,22 @@ During onboarding, the skill asks if you want tasks written to an external file.
 ```
 
 Tasks are created automatically from recommendations and can be managed in Obsidian or any markdown editor. If no path is set, tasks are only shown in conversation.
+
+### Photo Identification
+
+Drop photos of any plants — houseplants, garden beds, outdoor trees, even wild plants — into a designated folder in your Obsidian vault. Then ask Claude to identify them:
+
+- *"Identify my plants"*
+- *"What's growing in the photos?"*
+
+For each photo, the skill reports:
+- Species and variety (or best guess)
+- Growth stage and health assessment
+- Visible problems (pests, deficiency, disease)
+- Location context (indoor/outdoor/container)
+- For houseplants: light and watering needs
+
+After your confirmation, identified plants are added to `plants.md` and a journal entry is created. Processed photos are moved to a `processed/` subfolder.
 
 ## Usage
 
