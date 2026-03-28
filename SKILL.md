@@ -37,8 +37,8 @@ If `profile.md` does not exist, start a dialog to create it. Ask one question at
 8. "Какой грунт/субстрат вы используете для рассады и контейнеров? (готовый покупной / свои смеси)" → Soil/substrate info
 9. "Ваш уровень опыта в садоводстве? (начинающий / средний / продвинутый)" → Level
 10. "Есть ли предпочтительные магазины или поставщики семян?" → Suppliers (optional)
-11. "Ведёте ли вы заметки по саду? (Obsidian / другое приложение / нет)" → Notes system. If yes, ask for path to create task files. Save as `tasks_path` in profile.
-12. "Хотите ли вы, чтобы я мог опознавать растения по фото? Можно скидывать фото в папку, и я определю вид, состояние, проблемы. Подходит для комнатных, садовых, любых растений." → If yes and tasks_path is set, create `{tasks_path}/Hus/Garden/Photos/` folder. Save photos_path in profile.
+11. "Где вести задачи по саду? (Obsidian / Linear / OmniFocus / нигде)" → Task backend. See "Task backend setup" section below.
+12. "Хотите ли вы, чтобы я мог опознавать растения по фото? Можно скидывать фото в папку, и я определю вид, состояние, проблемы. Подходит для комнатных, садовых, любых растений." → If yes and tasks_path is set, create photos folder. Save photos_path in profile.
 
 After collecting answers, create `profile.md` using the template structure. Also create empty `plants.md` and `journal.md` from their templates.
 
@@ -197,9 +197,28 @@ On each invocation, silently evaluate:
 
 If there are actionable recommendations, mention them briefly at the end of your response. Don't repeat recommendations the user has already acknowledged.
 
-## Tasks
+## Task backend setup
 
-If `tasks_path` is set in profile.md, write actionable garden tasks to `{tasks_path}/Garden Tasks.md`.
+During onboarding, ask the user which task system to use. Save choice as `tasks_backend` in profile.md.
+
+### Checking MCP availability
+
+When user selects Linear or OmniFocus, verify the MCP is available by checking if its tools are listed. If not available, provide installation instructions:
+
+**Linear** (official remote MCP):
+```bash
+claude mcp add --transport http linear-server https://mcp.linear.app/mcp
+```
+Then restart session and run `/mcp` to complete OAuth.
+
+**OmniFocus** (community MCP — github.com/avlihachev/mcp-omnifocus):
+Check installation instructions at the repo. MCP name in config: `omnifocus`.
+
+**Obsidian** — no MCP needed, just ask for vault path. Save as `tasks_path` in profile.
+
+If MCP is not available and user can't install now, offer Obsidian as fallback.
+
+## Tasks
 
 ### When to create tasks
 
@@ -207,7 +226,9 @@ If `tasks_path` is set in profile.md, write actionable garden tasks to `{tasks_p
 - When the user asks to plan upcoming work
 - When seasonal formulas indicate upcoming deadlines
 
-### Task format (Obsidian-compatible)
+### Backend: Obsidian (`tasks_backend: obsidian`)
+
+Write tasks to `{tasks_path}/Garden Tasks.md`.
 
 ```markdown
 # Garden Tasks
@@ -217,22 +238,57 @@ If `tasks_path` is set in profile.md, write actionable garden tasks to `{tasks_p
 - [ ] Lower temperature to 22-24°C for chili seedlings #garden/chili
 
 ## Upcoming
-- [ ] Sow indeterminate tomatoes (Tigerella, Kakao, Marmande, Liguria) #garden/tomato 📅 05.04.2026
-- [ ] Start basil second attempt with grow light #garden/basil 📅 10.04.2026
+- [ ] Sow indeterminate tomatoes #garden/tomato 📅 05.04.2026
 
 ## Completed
-- [x] Sow chili seeds (Early Jalapeño, Habanero, Bird Chili) ✅ 18.02.2026
+- [x] Sow chili seeds ✅ 18.02.2026
 ```
 
-### Rules
+Rules:
+- Obsidian checkbox syntax: `- [ ]` / `- [x]`
+- `#garden/[crop]` tags for filtering
+- `📅 DD.MM.YYYY` for due dates
+- Sections: "This week" / "Upcoming" / "Completed"
+- Read file before writing to avoid duplicates
+- Move done tasks to Completed with `✅ DD.MM.YYYY`
 
-- Use Obsidian checkbox syntax: `- [ ]` for open, `- [x]` for done
-- Add `#garden/[crop]` tags for filtering
-- Add `📅 DD.MM.YYYY` for due dates when applicable
-- Keep "This week" / "Upcoming" / "Completed" sections
-- When a task is done (user confirms or journal entry matches), move it to Completed with `✅ DD.MM.YYYY`
-- Read the file before writing to avoid duplicates or overwriting manual edits
-- If `tasks_path` is not set, don't create the file — just mention tasks in conversation
+### Backend: Linear (`tasks_backend: linear`)
+
+Create issues via `mcp__linear-server__*` tools.
+
+Mapping:
+- **Project:** use or create a Linear project named "Garden" (ask user for team on first use, save as `linear_team` in profile)
+- **Title:** task description
+- **Due date:** computed from seasonal formulas (DD.MM.YYYY)
+- **Labels:** create/use labels matching crop tags (e.g., "tomato", "chili", "basil")
+- **Priority:** urgent for frost warnings and overdue stages, normal for routine tasks
+- **Description:** include context — why this task now, reference to timing.md formulas
+
+When completing: update issue status to "Done" when user confirms or journal entry matches.
+
+### Backend: OmniFocus (`tasks_backend: omnifocus`)
+
+Create tasks via `mcp__omnifocus__*` tools.
+
+Mapping:
+- **Project:** use or create a project named "Garden"
+- **Task name:** action description
+- **Due date:** computed from seasonal formulas
+- **Tags:** crop name (e.g., "tomato", "chili")
+- **Note:** context — why this task, what to watch for
+
+When completing: mark task complete when user confirms or journal entry matches.
+
+### Backend: none (`tasks_backend: none`)
+
+Tasks are only mentioned in conversation. No external writes.
+
+### Common rules (all backends)
+
+- Don't create duplicate tasks — check existing tasks before creating
+- Group related actions (e.g., "prick out 3 tomato varieties" = 1 task, not 3)
+- Include actionable detail in task titles (what to do, not why)
+- Due dates come from seasonal formulas + profile.md frost dates
 
 ## Photo identification
 
