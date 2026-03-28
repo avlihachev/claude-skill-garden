@@ -1,12 +1,13 @@
 ---
 name: garden
 description: >
-  Gardening assistant optimized for container growing. Use when the user asks about
-  gardening, growing plants, sowing, seedlings, transplanting, watering, fertilizing,
-  lighting, or any garden/vegetable crops. Also for questions about seeds, soil, pots,
-  grow lights, hardening, sowing dates, frost dates, overwintering. Use when the user
-  mentions specific crops: tomatoes, peppers, chili, basil, herbs, boxwood, strawberries,
-  or any other edible/ornamental plants in containers.
+  Gardening assistant for containers, raised beds, open ground, and mixed gardens.
+  Use when the user asks about gardening, growing plants, sowing, seedlings,
+  transplanting, watering, fertilizing, lighting, pruning, or any garden/vegetable crops.
+  Also for questions about seeds, soil, pots, grow lights, hardening, sowing dates,
+  frost dates, overwintering, fruit trees, berry bushes, perennials, cover crops.
+  Use when the user mentions specific crops: tomatoes, peppers, chili, basil, herbs,
+  strawberries, potatoes, peas, or any other edible/ornamental plants.
 ---
 
 # Garden Skill
@@ -29,13 +30,14 @@ If `profile.md` does not exist, start a dialog to create it. Ask one question at
 1. "В каком городе и стране вы выращиваете?" → City, Country, Latitude
 2. "Знаете ли вы свою зону морозостойкости (hardiness zone) или дату последних весенних заморозков?" → Zone or last frost date. If user doesn't know, estimate from city/latitude.
 3. "Какой формат выращивания? (контейнеры / высокие грядки / теплица / открытый грунт / комбинация)" → Format
-4. "Есть ли место для рассады в помещении? (подоконник, стеллаж, фитолампы)" → Indoor space
-5. "Какое открытое пространство доступно? (балкон / терраса / двор / участок)" → Outdoor space
-6. "Какой размер доступного пространства? (примерная площадь или количество мест для контейнеров)" → Space dimensions
-7. "Какой грунт/субстрат вы используете или планируете? (готовый покупной / свои смеси / земля с участка)" → Soil/substrate info
-8. "Ваш уровень опыта в садоводстве? (начинающий / средний / продвинутый)" → Level
-9. "Есть ли предпочтительные магазины или поставщики семян?" → Suppliers (optional)
-10. "Хотите ли вы, чтобы задачи по уходу записывались в отдельный файл? (Obsidian vault path / нет)" → Tasks output. If user provides a path, save it in profile as `tasks_path`. If not — tasks are only shown in conversation.
+4. "Есть ли место для рассады в помещении? (подоконник, стеллаж, фитолампы)" → Indoor space. Also ask: "Есть ли тёплое помещение для проращивания? (топочная, бойлерная, тёплая кладовка)"
+5. "Какое открытое пространство доступно? (балкон / терраса / двор / участок)" → Outdoor space. **Important: ask orientation** (south/north/east/west) — this significantly affects light and growing possibilities.
+6. "Если есть участок — какой тип почвы? (глина / суглинок / песок / торф / не знаю)" → Native soil type. Also ask: "Есть ли компостная система?"
+7. "Есть ли уже посаженные деревья, кусты или многолетники? (плодовые деревья, ягодные кусты, ревень, спаржа и т.д.)" → Existing perennials. This is critical — users often have established gardens they don't mention unprompted.
+8. "Какой грунт/субстрат вы используете для рассады и контейнеров? (готовый покупной / свои смеси)" → Soil/substrate info
+9. "Ваш уровень опыта в садоводстве? (начинающий / средний / продвинутый)" → Level
+10. "Есть ли предпочтительные магазины или поставщики семян?" → Suppliers (optional)
+11. "Ведёте ли вы заметки по саду? (Obsidian / другое приложение / нет)" → Notes system. If yes, ask for path to create task files. Save as `tasks_path` in profile.
 
 After collecting answers, create `profile.md` using the template structure. Also create empty `plants.md` and `journal.md` from their templates.
 
@@ -53,6 +55,8 @@ All dates are computed relative to `last_frost_date` from profile.md. Never hard
 
 ### Formulas
 
+### Indoor sowing
+
 | Event | Formula |
 |-------|---------|
 | Sow peppers/chili indoors | last_frost - 10..12 weeks |
@@ -60,10 +64,51 @@ All dates are computed relative to `last_frost_date` from profile.md. Never hard
 | Sow tomatoes (fast/indeterminate) indoors | last_frost - 6..8 weeks |
 | Sow basil indoors | last_frost - 6..8 weeks |
 | Sow herbs (dill, parsley, cilantro) indoors | last_frost - 4..6 weeks |
+| Sow alpine strawberry indoors | last_frost - 10..12 weeks |
+
+### Outdoor transplant and direct sowing
+
+| Event | Formula |
+|-------|---------|
 | Start hardening | transplant_date - 14 days |
 | Transplant outdoors (tender crops) | last_frost + 1..2 weeks |
 | Transplant outdoors (hardy crops) | last_frost - 2..4 weeks |
+| Direct sow peas, radish, lettuce | last_frost - 4..6 weeks (cold-tolerant) |
+| Direct sow under greenhouse/tunnel | last_frost - 6..8 weeks |
+| Plant potatoes (bags, can shelter) | last_frost - 4 weeks |
+| Plant potatoes (open ground) | last_frost - 2 weeks |
+| Start chitting potatoes | planting_date - 4..6 weeks |
+
+### Pruning (fruit trees and berry bushes)
+
+| Event | Formula / Timing |
+|-------|-----------------|
+| Prune pome fruit (apple, pear) | Late winter / early spring, before bud break |
+| Prune stone fruit (cherry, plum) | SUMMER ONLY (July-August) — spring pruning risks silver leaf disease |
+| Prune currants, gooseberry | Late winter / early spring, before bud break |
+| Prune blackberry | Early spring — remove spent fruiting canes |
+| Tip raspberry canes | Early spring — cut to ~150 cm |
+| Prune sea buckthorn | Early spring — remove dead/damaged |
+
+### Perennial care
+
+| Event | Formula / Timing |
+|-------|-----------------|
+| Asparagus: first harvest | NOT before year 3 in ground — let all spears grow to fern |
+| Rhubarb: remove flower stalks | As they appear (spring-summer) |
+| Rhubarb: harvest limit | Never more than 1/3 of stalks at once |
+| Strawberry bed cleanup | Early spring — remove dead leaves, old runners, check crowns |
+| Biennial herbs (caraway): seed harvest | Year 2 — collect seeds when ripe, plant dies after |
+| Mint: check spread | Every spring — may need border or container |
+
+### Cover crops and fall
+
+| Event | Formula |
+|-------|---------|
+| Sow cover crop (mustard, etc.) on empty beds | After harvest (Aug-Sep), or spring 4-6 weeks before planting |
+| Cut/incorporate cover crop | Before flowering, or before first frost |
 | Bring tender perennials indoors (fall) | first_frost - 2 weeks |
+| Lime application (clay/acidic soil) | Fall, after harvest |
 
 When making recommendations, compute actual dates from these formulas and the user's profile.
 
@@ -77,19 +122,51 @@ Required when natural daylight < 12 hours or when growing seedlings indoors befo
 
 ## Plant management
 
-When the user adds a new plant, create an entry in `plants.md` under "## Active":
+When the user adds a new plant, create an entry in `plants.md` under the appropriate section.
+
+### plants.md structure
+
+Organize plants by location, not by type. Create sections as needed:
+
+```markdown
+# My Plants — [year] Season
+
+## Indoor seedlings
+(plants being raised indoors before transplant)
+
+## Containers — [location, e.g. "South balcony"]
+(plants that will stay in containers)
+
+## Open garden — Fruit trees
+(apple, pear, cherry, plum, etc.)
+
+## Open garden — Berry bushes
+(currants, gooseberry, raspberry, blackberry, etc.)
+
+## Open garden — Beds and perennials
+(strawberry beds, asparagus, rhubarb, garlic, herbs, cover crops, etc.)
+
+## Archived
+(completed or failed plants from this season)
+```
+
+### Plant entry format
 
 ```
 ### [Crop] — [Variety]
 - Type:
 - Source:
-- Container:
-- Sown:
+- Container: (or "open ground", "raised bed", etc.)
+- Sown: (date or "n/a" for established plants)
 - Status: planned
 - Notes:
 ```
 
-Status lifecycle: `planned → sown → germinating → seedling → hardening → outdoor → harvesting → done / failed`
+### Status lifecycle
+
+Annual crops: `planned → sown → germinating → seedling → hardening → outdoor → harvesting → done / failed`
+
+Perennials/trees: `planned → planted → establishing → outdoor → harvesting → dormant` (cycle repeats)
 
 When a plant is done or failed, move it to "## Archived" with an Outcome line.
 
@@ -165,6 +242,8 @@ Use these files for domain knowledge when answering questions:
 - `references/soil.md` — substrates, mixes, components, pH
 - `references/fertilizers.md` — feeding types and schedules
 - `references/pests.md` — pests, diseases, prevention, treatment
+- `references/pruning.md` — fruit tree and berry bush pruning by season
+- `references/common-mistakes.md` — frequent seedling and gardening mistakes
 
 ## Key principles
 
@@ -173,3 +252,8 @@ Use these files for domain knowledge when answering questions:
 3. **Physiological drought** — in spring, sun activates transpiration before frozen substrate can supply water. Relevant for overwintering containers.
 4. **Don't overwhelm beginners** — scale advice complexity to the user's experience level from profile.
 5. **Concrete over abstract** — when recommending products, containers, or methods, be specific. Reference the user's preferred suppliers from profile when possible.
+6. **Germination temp ≠ growing temp** — many users keep seedlings at germination temperature (25-30°C) indefinitely, causing leggy growth. Always remind to lower temp after sprouting.
+7. **Water the soil, not the plant** — misting is not watering. Seedling roots need water delivered to the substrate. This is the #1 seedling care mistake.
+8. **Don't loosen soil around seedlings** — seedling roots are in the top 1-2 cm. Loosening tears them.
+9. **Cross-check dates with user's notes** — if the user has an external notes system (Obsidian, etc.), read it on first invocation to avoid date discrepancies.
+10. **Pruning timing saves trees** — stone fruit (cherry, plum) pruned in spring can develop silver leaf disease. This is a critical, non-obvious rule that must always be flagged.
