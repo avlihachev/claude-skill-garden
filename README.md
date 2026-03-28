@@ -63,6 +63,7 @@ On first gardening-related query, Claude starts an onboarding dialog:
 7. Soil and substrate (store-bought mix / custom blends / garden soil)
 8. Experience level
 9. Preferred seed suppliers (optional)
+10. Task output path (Obsidian vault or none)
 
 This creates your `profile.md` with all the data needed for personalized recommendations.
 
@@ -75,6 +76,23 @@ You can update your profile at any time:
 - *"Add a new supplier"*
 
 The skill also proactively suggests profile updates when it notices contradictions (e.g., you mention a greenhouse but your profile says "containers only").
+
+### Task Output (Obsidian)
+
+During onboarding, the skill asks if you want tasks written to an external file. If you provide an Obsidian vault path, the skill creates `Garden Tasks.md` there with Obsidian-compatible checkboxes:
+
+```markdown
+## This week
+- [ ] Prick out chili seedlings into 7-10 cm pots #garden/chili 📅 30.03.2026
+
+## Upcoming
+- [ ] Sow indeterminate tomatoes #garden/tomato 📅 05.04.2026
+
+## Completed
+- [x] Sow chili seeds ✅ 18.02.2026
+```
+
+Tasks are created automatically from recommendations and can be managed in Obsidian or any markdown editor. If no path is set, tasks are only shown in conversation.
 
 ## Usage
 

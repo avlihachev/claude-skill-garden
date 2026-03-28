@@ -35,6 +35,7 @@ If `profile.md` does not exist, start a dialog to create it. Ask one question at
 7. "Какой грунт/субстрат вы используете или планируете? (готовый покупной / свои смеси / земля с участка)" → Soil/substrate info
 8. "Ваш уровень опыта в садоводстве? (начинающий / средний / продвинутый)" → Level
 9. "Есть ли предпочтительные магазины или поставщики семян?" → Suppliers (optional)
+10. "Хотите ли вы, чтобы задачи по уходу записывались в отдельный файл? (Obsidian vault path / нет)" → Tasks output. If user provides a path, save it in profile as `tasks_path`. If not — tasks are only shown in conversation.
 
 After collecting answers, create `profile.md` using the template structure. Also create empty `plants.md` and `journal.md` from their templates.
 
@@ -99,7 +100,7 @@ When updating a plant's status, also add a journal entry.
 When the user reports an action or observation, add an entry at the TOP of `journal.md` (reverse chronological):
 
 ```
-## YYYY-MM-DD
+## DD.MM.YYYY
 
 ### [Brief description]
 - Action: [sowed / pricked out / transplanted / fed / observed / harvested]
@@ -117,6 +118,43 @@ On each invocation, silently evaluate:
 3. **Recent journal** → any problems mentioned that need follow-up?
 
 If there are actionable recommendations, mention them briefly at the end of your response. Don't repeat recommendations the user has already acknowledged.
+
+## Tasks
+
+If `tasks_path` is set in profile.md, write actionable garden tasks to `{tasks_path}/Garden Tasks.md`.
+
+### When to create tasks
+
+- After giving recommendations that require action (sowing, pricking out, hardening, etc.)
+- When the user asks to plan upcoming work
+- When seasonal formulas indicate upcoming deadlines
+
+### Task format (Obsidian-compatible)
+
+```markdown
+# Garden Tasks
+
+## This week
+- [ ] Prick out chili seedlings into 7-10 cm pots #garden/chili 📅 30.03.2026
+- [ ] Lower temperature to 22-24°C for chili seedlings #garden/chili
+
+## Upcoming
+- [ ] Sow indeterminate tomatoes (Tigerella, Kakao, Marmande, Liguria) #garden/tomato 📅 05.04.2026
+- [ ] Start basil second attempt with grow light #garden/basil 📅 10.04.2026
+
+## Completed
+- [x] Sow chili seeds (Early Jalapeño, Habanero, Bird Chili) ✅ 18.02.2026
+```
+
+### Rules
+
+- Use Obsidian checkbox syntax: `- [ ]` for open, `- [x]` for done
+- Add `#garden/[crop]` tags for filtering
+- Add `📅 DD.MM.YYYY` for due dates when applicable
+- Keep "This week" / "Upcoming" / "Completed" sections
+- When a task is done (user confirms or journal entry matches), move it to Completed with `✅ DD.MM.YYYY`
+- Read the file before writing to avoid duplicates or overwriting manual edits
+- If `tasks_path` is not set, don't create the file — just mention tasks in conversation
 
 ## Reference files
 
