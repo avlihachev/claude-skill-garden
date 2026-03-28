@@ -2,6 +2,9 @@
 
 A universal [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skill — your personal gardening assistant. Optimized for container growing but supports any format: raised beds, greenhouses, open ground.
 
+<img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/d4b8c144-302d-481f-ad04-51339e7b2a81" />
+
+
 ## Features
 
 - **Seasonal calendar** — automatic sowing, pricking out, hardening, and transplanting dates based on your last frost date
