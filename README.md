@@ -1,201 +1,207 @@
 # Garden Skill
 
-Универсальный скилл для Claude Code — персональный помощник по садоводству и огородничеству. Оптимизирован для контейнерного выращивания, но поддерживает любой формат: грядки, теплицы, открытый грунт.
+A universal [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skill — your personal gardening assistant. Optimized for container growing but supports any format: raised beds, greenhouses, open ground.
 
-## Возможности
+## Features
 
-- **Сезонный календарь** — автоматический расчёт сроков посева, пикировки, закалки и высадки на основе даты последних заморозков в вашем регионе
-- **Трекер растений** — учёт всех культур с жизненным циклом от планирования до урожая
-- **Журнал наблюдений** — хронологическая запись всех действий и наблюдений за сезон
-- **Рекомендации** — при каждом обращении скилл проверяет, что пора делать, и предупреждает о рисках
-- **Справочная база** — температурные режимы, субстраты, удобрения, вредители, контейнеры
+- **Seasonal calendar** — automatic sowing, pricking out, hardening, and transplanting dates based on your last frost date
+- **Plant tracker** — track all crops through their full lifecycle from planning to harvest
+- **Garden journal** — chronological log of all actions and observations throughout the season
+- **Smart recommendations** — on each invocation the skill checks what needs doing and warns about risks
+- **Reference library** — temperature regimes, substrates, fertilizers, pests, containers
 
-## Установка
+## Installation
 
-Скопируйте папку `garden/` в директорию скиллов Claude Code:
+Copy the skill folder into your Claude Code skills directory:
+
+```bash
+git clone https://github.com/avlihachev/claude-skill-garden.git ~/.claude/skills/garden
+```
+
+Or manually:
 
 ```bash
 cp -r garden/ ~/.claude/skills/garden/
 ```
 
-Скилл автоматически определяется Claude Code при следующем запуске.
+The skill is automatically detected by Claude Code on the next session start.
 
-## Структура файлов
+## File Structure
 
 ```
 garden/
-├── SKILL.md              # логика скилла (движок)
-├── profile.md            # профиль пользователя (локация, условия)
-├── plants.md             # список растений текущего сезона
-├── journal.md            # журнал наблюдений
-├── README.md             # эта документация
+├── SKILL.md              # skill logic (engine)
+├── profile.md            # user profile (location, conditions) — created on first run
+├── plants.md             # current season plant list — created on first run
+├── journal.md            # observation journal — created on first run
+├── README.md             # this documentation
 └── references/
-    ├── timing.md         # температуры, сроки, досветка, закалка
-    ├── containers.md     # контейнеры, объёмы, материалы, дренаж
-    ├── soil.md           # субстраты, компоненты, рецепты смесей, pH
-    ├── fertilizers.md    # удобрения, NPK, графики подкормок
-    └── pests.md          # вредители, болезни, профилактика, лечение
+    ├── timing.md         # temperatures, sowing schedules, grow lights, hardening
+    ├── containers.md     # container types, volumes, materials, drainage
+    ├── soil.md           # substrates, components, mix recipes, pH
+    ├── fertilizers.md    # fertilizer types, NPK, feeding schedules
+    └── pests.md          # pests, diseases, prevention, treatment
 ```
 
-### Разделение на универсальное и персональное
+### Universal vs Personal
 
-| Файлы | Тип | Описание |
-|-------|-----|----------|
-| `SKILL.md` + `references/` | Универсальные | Логика и справочники. Не привязаны к локации или пользователю. |
-| `profile.md`, `plants.md`, `journal.md` | Персональные | Создаются при первом запуске через диалог (onboarding). |
+| Files | Type | Description |
+|-------|------|-------------|
+| `SKILL.md` + `references/` | Universal | Logic and reference library. Not tied to any location or user. |
+| `profile.md`, `plants.md`, `journal.md` | Personal | Created on first run via interactive onboarding dialog. |
 
-## Первый запуск
+## First Run
 
-При первом обращении к скиллу с вопросом о садоводстве, Claude запустит onboarding — серию вопросов:
+On first gardening-related query, Claude starts an onboarding dialog:
 
-1. Город и страна
-2. Зона морозостойкости или дата последних заморозков
-3. Формат выращивания (контейнеры / грядки / теплица / открытый грунт)
-4. Наличие места для рассады (подоконник, фитолампы)
-5. Открытое пространство (балкон, терраса, двор)
-6. Уровень опыта
-7. Предпочтительные поставщики семян (опционально)
+1. City and country
+2. Hardiness zone or last frost date
+3. Growing format (containers / raised beds / greenhouse / open ground)
+4. Indoor space for seedlings (windowsill, grow lights)
+5. Outdoor space (balcony, terrace, yard)
+6. Experience level
+7. Preferred seed suppliers (optional)
 
-По результатам создаётся `profile.md` с вашими данными.
+This creates your `profile.md` with all the data needed for personalized recommendations.
 
-## Использование
+## Usage
 
-### Общие вопросы
+### General Questions
 
-Просто задавайте вопросы о садоводстве в любом контексте — скилл активируется автоматически:
+Just ask about gardening — the skill activates automatically:
 
-- *«Когда мне сеять томаты?»*
-- *«Какой грунт нужен для перцев?»*
-- *«У рассады желтеют нижние листья, что делать?»*
-- *«Какой контейнер нужен для индетерминантных томатов?»*
+- *"When should I sow tomatoes?"*
+- *"What soil mix do peppers need?"*
+- *"My seedlings have yellowing lower leaves, what's wrong?"*
+- *"What container size for indeterminate tomatoes?"*
 
-### Добавление растений
+### Adding Plants
 
-Сообщите, что хотите добавить растение — скилл создаст запись в `plants.md`:
+Tell Claude you want to add a plant — it creates an entry in `plants.md`:
 
-- *«Добавь томат Черри Кира, семена из Леруа»*
-- *«Хочу попробовать выращивать клубнику в контейнерах»*
+- *"Add cherry tomato Tigerella, seeds from Impecta"*
+- *"I want to try growing strawberries in containers"*
 
-### Журнал
+### Journal
 
-Сообщайте о действиях — скилл запишет в `journal.md` и обновит статусы:
+Report actions — the skill logs them in `journal.md` and updates plant statuses:
 
-- *«Сегодня посеял базилик Dark Opal, грунт для рассады, под плёнку»*
-- *«Распикировал томаты Venus по горшочкам 10 см»*
-- *«У перцев появились первые настоящие листья»*
+- *"Sowed basil Dark Opal today, seed-starting mix, covered with film"*
+- *"Pricked out Venus tomatoes into 10 cm pots"*
+- *"Peppers showing first true leaves"*
 
-### Рекомендации
+### Recommendations
 
-При каждом обращении скилл проверяет:
+On each invocation the skill evaluates:
 
-- Текущая дата vs сезонные формулы — что пора делать?
-- Статусы растений — есть ли просроченные этапы?
-- Последние записи в журнале — нужен ли follow-up?
+- Current date vs seasonal formulas — what should be done now?
+- Plant statuses — any overdue stages?
+- Recent journal entries — any issues needing follow-up?
 
-## Сезонная логика
+## Seasonal Logic
 
-Все даты вычисляются относительно `last_frost_date` из вашего профиля. Никаких захардкоженных календарей.
+All dates are computed relative to `last_frost_date` from your profile. No hardcoded calendars.
 
-### Примеры формул
+### Formulas
 
-| Событие | Формула |
-|---------|---------|
-| Посев перцев/чили в помещении | last_frost - 10..12 недель |
-| Посев томатов (детерминантные) | last_frost - 8..10 недель |
-| Посев томатов (индетерминантные) | last_frost - 6..8 недель |
-| Посев базилика | last_frost - 6..8 недель |
-| Начало закалки | дата высадки - 14 дней |
-| Высадка теплолюбивых на улицу | last_frost + 1..2 недели |
-| Занос теплолюбивых многолетников осенью | first_frost - 2 недели |
+| Event | Formula |
+|-------|---------|
+| Sow peppers/chili indoors | last_frost - 10..12 weeks |
+| Sow tomatoes (determinate) | last_frost - 8..10 weeks |
+| Sow tomatoes (indeterminate) | last_frost - 6..8 weeks |
+| Sow basil | last_frost - 6..8 weeks |
+| Start hardening | transplant_date - 14 days |
+| Transplant tender crops outdoors | last_frost + 1..2 weeks |
+| Bring tender perennials indoors (fall) | first_frost - 2 weeks |
 
-### Пример
+### Example
 
-Если ваш `last_frost_date = June 15`:
-- Посев перцев: конец марта — начало апреля
-- Посев детерминантных томатов: середина апреля
-- Начало закалки: начало июня
-- Высадка на улицу: конец июня
+If your `last_frost_date = June 15`:
+- Sow peppers: late March — early April
+- Sow determinate tomatoes: mid April
+- Start hardening: early June
+- Transplant outdoors: late June
 
-## Жизненный цикл растений
+## Plant Lifecycle
 
-Каждое растение в `plants.md` проходит через статусы:
+Each plant in `plants.md` moves through statuses:
 
 ```
 planned → sown → germinating → seedling → hardening → outdoor → harvesting → done
                                                                               ↘ failed
 ```
 
-При завершении (done/failed) растение перемещается в секцию **Archived** с описанием результата.
+When finished (done/failed), the plant moves to the **Archived** section with an outcome description.
 
-## Справочники (references/)
+## Reference Library
 
 ### timing.md
-- Температуры прорастания по семействам культур
-- Температурные режимы рассады (день/ночь)
-- Параметры досветки (высота, часы, спектр)
-- Таблица сроков посева (недели до last_frost)
-- Сроки высадки и минимальные ночные температуры
-- Универсальная 2-недельная схема закалки
+- Germination temperatures by crop family
+- Seedling temperature regimes (day/night)
+- Grow light parameters (height, hours, spectrum)
+- Sowing lead times (weeks before last_frost)
+- Transplant timing and minimum night temperatures
+- Universal 2-week hardening schedule
 
 ### containers.md
-- Рекомендуемые объёмы по типам культур (от 1 л для базилика до 20 л для индетерминантных томатов)
-- Сравнение материалов: пластик, ткань, керамика, grow bags, мешки грунта
-- Требования к дренажу
-- Управление температурой (перегрев, утепление на ночь)
-- Зимовка контейнерных многолетников
+- Recommended volumes by crop type (from 1L for basil to 20L for indeterminate tomatoes)
+- Material comparison: plastic, fabric, ceramic, grow bags, soil bags
+- Drainage requirements
+- Temperature management (overheating, cold night insulation)
+- Overwintering container perennials
 
 ### soil.md
-- Типы субстратов: посевной, рассадный, универсальный, овощной
-- Компоненты: торф, кокос, перлит, вермикулит, компост
-- Рецепты смесей по назначению
-- Таблица pH по культурам
-- Управление субстратом: замена, проблемы (засоление, гидрофобность, уплотнение)
+- Substrate types: seed-starting, potting, universal, vegetable
+- Components: peat, coir, perlite, vermiculite, compost
+- Mix recipes by use case
+- pH ranges by crop
+- Substrate management: replacement, common problems (salt buildup, hydrophobicity, compaction)
 
 ### fertilizers.md
-- Типы удобрений: медленного действия, жидкие, органические, фолиарные
-- NPK: что делает каждый элемент, признаки дефицита
-- Соотношения NPK по стадиям роста
-- Графики подкормок: рассада → вегетация → цветение → плодоношение
-- Специфика контейнеров: вымывание, засоление, промывка
+- Fertilizer types: slow-release, liquid, organic, foliar
+- NPK: what each nutrient does, deficiency signs
+- NPK ratios by growth stage
+- Feeding schedules: seedling → vegetative → flowering → fruiting
+- Container specifics: leaching, salt buildup, flushing
 
 ### pests.md
-- Вредители: тля, белокрылка, паутинный клещ, грибные комарики, слизни
-- Болезни: чёрная ножка, мучнистая роса, вершинная гниль, фитофтороз
-- Для каждого: симптомы, профилактика, лечение
-- Особенности контейнерного выращивания
+- Pests: aphids, whitefly, spider mites, fungus gnats, slugs
+- Diseases: damping off, powdery mildew, blossom end rot, late blight
+- For each: symptoms, prevention, treatment
+- Container-specific considerations
 
-## Персонализация
+## Customization
 
-### Смена локации
+### Changing Location
 
-Отредактируйте `profile.md` — измените город, широту и даты заморозков. Все рекомендации автоматически пересчитаются.
+Edit `profile.md` — update city, latitude, and frost dates. All recommendations recalculate automatically.
 
-### Новый сезон
+### New Season
 
-В начале нового сезона:
-1. Переместите все растения из Active в Archived в `plants.md`
-2. Обновите заголовок: `# My Plants — [новый год] Season`
-3. Создайте новый `journal.md` (старый можно переименовать в `journal-2026.md`)
-4. Добавьте новые растения
+At the start of a new season:
+1. Move all plants from Active to Archived in `plants.md`
+2. Update the heading: `# My Plants — [new year] Season`
+3. Create a new `journal.md` (optionally rename the old one to `journal-2026.md`)
+4. Add new plants
 
-### Распространение
+### Sharing
 
-Для передачи скилла другому пользователю:
-1. Скопируйте `SKILL.md` и папку `references/` — это универсальная часть
-2. Удалите `profile.md`, `plants.md`, `journal.md` — они создадутся при первом запуске через onboarding
+To share the skill with another user:
+1. Share `SKILL.md` and the `references/` folder — this is the universal part
+2. Remove `profile.md`, `plants.md`, `journal.md` — they will be created on first run via onboarding
 
-## Планы развития
+## Roadmap
 
-**Phase 2: MCP-сервер для садоводства**
+**Phase 2: Garden MCP Server**
 
-Собственный MCP-сервер, который добавит:
-- Прогноз погоды и предупреждения о заморозках для вашей локации
-- Оценка температуры почвы
-- Автоматические сезонные рекомендации на основе реальной погоды
-- Исторические данные погоды для анализа трендов
+A custom MCP server that will add:
+- Weather forecasts and frost alerts for your location
+- Soil temperature estimation
+- Automatic seasonal recommendations based on real weather data
+- Historical weather data for trend analysis
 
-Скилл будет определять наличие MCP-сервера и использовать его при наличии, работая без него в ручном режиме.
+The skill will detect MCP server availability and use it when present, falling back to manual mode when absent.
 
-## Лицензия
+## License
 
 MIT
